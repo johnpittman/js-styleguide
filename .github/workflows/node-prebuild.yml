@@ -1,0 +1,195 @@
+name: Node - Prebuild
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  typecheck:
+    name: 'Typecheck'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: |
+            src/**/*.{ts,tsx}
+            **/tsconfig.json
+            **/tsconfig*.json
+
+      # Setup environment
+      - name: Use Node.js
+        if: env.GIT_DIFF
+        uses: actions/setup-node@v2
+        with:
+          check-latest: true
+
+      # Caches
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v2
+        if: env.GIT_DIFF
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache tsc
+        uses: actions/cache@v2
+        if: env.GIT_DIFF
+        with:
+          path: ./tsconfig.tsbuildinfo
+          key: ${{ runner.os }}-cache-tsc
+
+      # Install
+      - name: Install dependencies
+        if: env.GIT_DIFF
+        run: npm ci --no-audit --prefer-offline  --ignore-scripts
+
+      # Run
+      - name: Typecheck
+        if: env.GIT_DIFF
+        run: npm run typecheck
+
+  test:
+    name: 'Test'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: |
+            **/*.test.*
+            src/**/*.*
+
+      # Setup environment
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        if: env.GIT_DIFF
+        with:
+          check-latest: true
+
+      # Caches
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v2
+        if: env.GIT_DIFF
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+
+      # Install
+      - name: Install dependencies
+        if: env.GIT_DIFF
+        run: npm ci --no-audit --prefer-offline --ignore-scripts
+
+      # Run
+      - name: Test
+        if: env.GIT_DIFF
+        run: npm run test
+
+  eslint:
+    name: 'ESLint'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: |
+            **/*.{js,jsx,ts,tsx,json,html}
+
+      # Setup environment
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        if: env.GIT_DIFF
+        with:
+          check-latest: true
+
+      # Caches
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v2
+        if: env.GIT_DIFF
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-cache-npm-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache eslint
+        uses: actions/cache@v2
+        if: env.GIT_DIFF
+        with:
+          path: ./.eslintcache
+          key: ${{ runner.os }}-cache-eslint
+
+      # Install
+      - name: Install dependencies
+        if: env.GIT_DIFF
+        # Skip husky install: --only-production --ignore-scripts
+        run: npm ci --no-audit --prefer-offline --only-production --ignore-scripts
+
+      # Run
+      - name: ESLint
+        if: env.GIT_DIFF
+        run: npm run lint:eslint
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4.9.0
+        if: env.GIT_DIFF
+        with:
+          commit_message: 'style: format'
+          branch: ${{ github.head_ref }}
+
+  stylelint:
+    name: 'Stylelint'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: |
+            **/*.{module.css,css}
+
+      # Setup environment
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        if: env.GIT_DIFF
+        with:
+          check-latest: true
+
+      # Caches
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v2
+        if: env.GIT_DIFF
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-cache-npm-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache stylelint
+        uses: actions/cache@v2
+        if: env.GIT_DIFF
+        with:
+          path: ./.stylelintcache
+          key: ${{ runner.os }}-cache-stylelint
+      
+      # Install
+      - name: Install dependencies
+        if: env.GIT_DIFF
+        run: npm ci --no-audit --prefer-offline --only-production --ignore-scripts
+
+      # Run
+      - name: Stylelint
+        if: env.GIT_DIFF
+        run: npm run lint:stylelint
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4.9.0
+        if: env.GIT_DIFF
+        with:
+          commit_message: 'style: format'
+          branch: ${{ github.head_ref }}

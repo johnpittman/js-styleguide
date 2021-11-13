@@ -1,0 +1,74 @@
+{
+  "name": "@johnpittman/styleguide",
+  "version": "0.0.1",
+  "main": "lib/index.css",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "bench": "for f in $(ls src/**/__bench__/**/*.bench.ts); do ts-node $f; done",
+    "build": "npm run clean && ts-node ./scripts/build.js",
+    "build:storybook": "npm run build && build-storybook",
+    "build:watch": "gulp watch --gulpfile ./scripts/tasks.js",
+    "clean": "rm -rf lib",
+    "lint": "npm run lint:stylelint && npm run lint:eslint --",
+    "lint:eslint": "eslint . --ext js,jsx,ts,tsx,json,html --ignore-pattern '*-lock.json' --ignore-path '.gitignore' --fix --cache",
+    "lint:staged": "lint-staged",
+    "lint:stylelint": "stylelint '**/*.css' '**/*.module.css' --ignore-path .gitignore --fix --cache",
+    "prepare": "is-ci || husky install",
+    "test": "jest --runInBand --passWithNoTests --silent",
+    "test:changed": "npm run test -- --changedSince=master",
+    "test:watch": "npm run test -- --watch",
+    "typecheck": "ttsc --p tsconfig-build.json --incremental --tsBuildInfoFile tsconfig.tsbuildinfo",
+    "storybook": "npm run build && start-storybook -p 6006"
+  },
+  "author": {
+    "name": "John Pittman",
+    "email": "johnrichardpittman@gmail.com",
+    "url": "https://github.com/johnpittman"
+  },
+  "license": "MIT",
+  "description": "React Storybook design system",
+  "keywords": [],
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnpittman/react-design-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/johnpittman/react-design-system.git/issues"
+  },
+  "homepage": "https://github.com/johnpittman/react-design-system.git#readme",
+  "dependencies": {
+    "@johnpittman/postcss-config": "*",
+    "@storybook/addon-actions": "^6.3.12",
+    "@storybook/addon-essentials": "^6.3.12",
+    "@storybook/addon-links": "^6.3.12",
+    "@storybook/react": "^6.3.12",
+    "chromatic": "^5.7.1",
+    "css-loader": "^5.2.0",
+    "gulp": "^4.0.2",
+    "gulp-postcss": "^9.0.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "recursive-readdir": "^2.2.2",
+    "storybook-addon-designs": "^6.2.0",
+    "style-loader": "^2.0.0",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths-webpack-plugin": "^3.5.1",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.2.4",
+    "typescript-plugin-css-modules": "^3.2.0",
+    "typescript-transform-paths": "^2.2.3"
+  },
+  "devDependencies": {
+    "@johnpittman/eslint-config": "*",
+    "@johnpittman/prettier-config": "*",
+    "@johnpittman/stylelint-config": "*",
+    "@types/jest": "^26.0.22",
+    "husky": "^6.0.0",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.4",
+    "ts-jest": "^26.5.4"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "importsNotUsedAsValues": "preserve",
+    "jsx": "react",
+    "lib": ["esnext", "dom"],
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "Node",
+    "noImplicitAny": false,
+    "paths": {
+      "~/*": ["./*"],
+      ">/*": ["./src/*"]
+    },
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true },
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ],
+    "pretty": true,
+    "resolveJsonModule": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "strict": true,
+    "typeRoots": ["node_modules/@types", "src/types"],
+    "types": ["node", "jest"]
+  },
+  "include": ["src/**/*"]
+}

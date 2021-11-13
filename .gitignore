@@ -1,0 +1,16 @@
+# Dev
+
+node_modules
+lib
+build
+storybook-static
+*.log
+
+# Cache
+
+.*cache
+*.tsbuildinfo
+
+# OS
+
+.DS_Store

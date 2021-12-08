@@ -2,7 +2,7 @@ import React from 'react';
 
 import generateVariableName from '>/utils/generateVariableName';
 
-const ColorCard = (props: { order: number; prefix: string; value: string }) => {
+const ColorCard = (props: { order: number; prefix: string; textTransform?: string; value: string }) => {
   return (
     <div
       style={{
@@ -24,7 +24,7 @@ const ColorCard = (props: { order: number; prefix: string; value: string }) => {
           fontWeight: 'bold',
           fontSize: 12,
           borderBottom: 'solid 1px lightgray',
-          textTransform: 'uppercase',
+          textTransform: props.textTransform === 'uppercase' ? 'uppercase' : 'lowercase',
           background: props.value
         }}
       >

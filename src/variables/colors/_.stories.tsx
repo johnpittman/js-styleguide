@@ -50,6 +50,7 @@ const Template: Story = (args) => {
             prefix={variableInfo.prefix}
             order={variableInfo.order}
             value={variableInfo.value}
+            textTransform="uppercase"
           />
         );
       })}
